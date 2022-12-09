@@ -1,0 +1,40 @@
+.main-header {
+  border-bottom: 1px solid black;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.nav-link {
+  background-color: rgb(210, 206, 206);
+  text-transform: uppercase;
+  padding: 0.5em 1em;
+  display: inline-block;
+}
+.nav-link:hover {
+  background-color: rgb(179, 179, 179);
+}
+.nav-link.currentPage {
+  font-weight: bold;
+}
+.logo {
+  font-size: 1.5rem;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.inputErrMsg {
+  color: tomato;
+}
+.inputErrField {
+  border: 1px solid red;
+  background-color: tomato;
+  color: white;
+}
