@@ -44,3 +44,20 @@ export function getCommentsFromDb(id) {
     .then((resp) => resp.json())
     .catch((err) => console.warn('some problem', err));
 }
+
+export function sendFetch(whatToSend, endpoint = 'posts') {
+  return fetch(`http://localhost:8001/${endpoint}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(whatToSend),
+  })
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch(console.warn);
+}
+
+export function getUsersFromDb(search = '') {
+  return fetch(`http://localhost:8001/users?q=${search}`)
+    .then((resp) => resp.json())
+    .catch((err) => console.warn('some problem', err));
+}

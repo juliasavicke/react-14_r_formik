@@ -1,4 +1,7 @@
 import { prepareDataForValidation, useFormik } from 'formik';
+import { sendFetch } from '../../helper/helper';
+import * as Yup from 'yup';
+import InputError from '../InputError';
 function AddCommentForm(props) {
   //init values for form: author, text, date, postId
 
@@ -9,22 +12,23 @@ function AddCommentForm(props) {
       date: '',
       postId: props.postId,
     },
-    // validationSchema: {},
-    onSubmit: (values) => {
+    validationSchema: Yup.object().shape({
+      author: Yup.string().min(4).required(),
+      text: Yup.string().min(10).required(),
+    }),
+    onSubmit: (values, { resetForm }) => {
       //siusti duomenis su fetch
       values.date = new Date();
       console.log('values ===', values);
-      //   sendDataFetch(values).then((data) => {
-      //     console.log('data ===', data);
-      //     if (data) {
-      //       confirm('postas sukurtas');
-      //       history.push('/posts');
-      //     }
-      //   });
-
-      //jei sekmingai nusiuntem tai console.log sekme
-      //sekmes atveju mes norim naviguoti i PostsPage su react router navigacija is AddPostsPage
-      //jei ne tai nesekme
+      sendFetch(values, 'comments').then((sendResult) => {
+        console.log('sendResult ===', sendResult);
+        if (sendResult.id) {
+          props.onNewComment();
+          resetForm();
+        } else {
+          // kazkas negerai nes neturim naujo komentaro id
+        }
+      });
     },
   });
 
@@ -40,6 +44,9 @@ function AddCommentForm(props) {
           name='author'
           placeholder='Author'
         />
+        {formik.touched.author && formik.errors.author && (
+          <InputError err={formik.errors.author} />
+        )}
         <input
           value={formik.values.text}
           onChange={formik.handleChange}

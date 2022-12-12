@@ -7,29 +7,20 @@ function CommentsList(props) {
   const allParams = useParams();
   const currentPostId = allParams.postId;
   //kreiptis su fetch parsisiusti komentarus
-  const [comments, setComments] = useState({});
+  //   const [comments, setComments] = useState({});
 
-  useEffect(() => {
-    getLatestComments();
-  }, []);
-
-  function getLatestComments() {
-    getCommentsFromDb(currentPostId).then((dataInJs) => {
-      setComments(dataInJs);
-    });
-  }
-  console.log('comments ===', comments);
+  //   console.log('comments ===', comments);
 
   //ir atvaizduoti
 
   //grazinti null jei komentaru nera
-  if (comments.length) {
+  if (props.items.length) {
     return (
       <div>
         <h2>Read our comments</h2>
         <ul>
-          {comments.length &&
-            comments.map((cObj) => (
+          {props.items.length &&
+            props.items.map((cObj) => (
               <SingleComment commentData={cObj}></SingleComment>
             ))}
         </ul>
