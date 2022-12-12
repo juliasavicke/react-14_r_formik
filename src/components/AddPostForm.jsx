@@ -1,4 +1,5 @@
 import { useFormik } from 'formik';
+import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import InputError from './InputError';
 function stringTagsToArr(str) {
@@ -8,15 +9,17 @@ function stringTagsToArr(str) {
     .filter((tag) => tag.length);
 }
 function AddPostForm(props) {
+  const history = useHistory();
   const formik = useFormik({
     initialValues: {
-      image: 'https://picsum.photos/29/1/200/300',
+      image: 'https://picsum.photos/id/29/200/300',
       title: 'Home sweet Home',
       tags: [],
       tagsStringInput: '',
       body: 'Post about the mountains...',
       reactions: 1,
       userId: 15,
+      archived: false,
     },
     validationSchema: Yup.object().shape({
       image: Yup.string()
@@ -30,13 +33,16 @@ function AddPostForm(props) {
       userId: Yup.number().positive().integer().min(1).max(15),
     }),
     onSubmit: (values) => {
-      //   console.log('values ===', values);
       values.tags = stringTagsToArr(values.tagsStringInput);
-      //   const tags = values.tags.split(', ');
-      //   console.log('tags ===', tags);
-
       //siusti duomenis su fetch
-      sendDataFetch(values).then((data) => console.log('data ===', data));
+      console.log('values ===', values);
+      sendDataFetch(values).then((data) => {
+        console.log('data ===', data);
+        if (data) {
+          confirm('postas sukurtas');
+          history.push('/posts');
+        }
+      });
 
       //jei sekmingai nusiuntem tai console.log sekme
       //sekmes atveju mes norim naviguoti i PostsPage su react router navigacija is AddPostsPage
@@ -44,16 +50,14 @@ function AddPostForm(props) {
     },
   });
 
-  function sendDataFetch(values) {
-    fetch('https://dummyjson.com/posts/add', {
+  function sendDataFetch(whatToSend) {
+    return fetch('http://localhost:8001/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
+      body: JSON.stringify(whatToSend),
     })
       .then((res) => res.json())
-      .then((data) => data)
-
-      .then(console.warn);
+      .catch(console.warn);
   }
   console.log('formik.touched ===', formik.touched);
 

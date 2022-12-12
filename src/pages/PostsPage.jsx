@@ -1,32 +1,45 @@
 import { useEffect, useState } from 'react';
 import SinglePost from '../components/SinglePost';
+import { sendDeletePatch, getPostsFromDb } from '../helper/helper';
 
 function PostsPage(props) {
   const [posts, setPosts] = useState({});
 
+  function deletePostHandler(idOfPostToBeDeleted) {
+    console.log('deletePostHandler called ', idOfPostToBeDeleted);
+    sendDeletePatch(idOfPostToBeDeleted).then((deleteResult) => {
+      console.log('deleteResult ===', deleteResult);
+      if (deleteResult === true) {
+        // parsisiusti naujus postus
+        getLatestPosts();
+      }
+    });
+  }
+
   useEffect(() => {
-    getPostsFromDb();
+    getLatestPosts();
   }, []);
 
-  async function getPostsFromDb() {
-    try {
-      const response = await fetch('/db/database.json');
-      const dataInJs = await response.json();
+  function getLatestPosts() {
+    getPostsFromDb().then((dataInJs) => {
       console.log('dataInJs ===', dataInJs);
       setPosts(dataInJs);
-    } catch (error) {
-      console.warn('did not get posts');
-    }
+    });
   }
-  console.log('posts ===', posts);
 
   return (
     <div>
       <h1>Posts</h1>
       <p>here are some posts</p>
       <div className='grid'>
-        {posts.posts &&
-          posts.posts.map((pObj) => <SinglePost postData={pObj} />)}
+        {posts.length &&
+          posts.map((pObj) => (
+            <SinglePost
+              key={pObj.id}
+              postData={pObj}
+              onDelete={deletePostHandler}
+            />
+          ))}
       </div>
     </div>
   );
