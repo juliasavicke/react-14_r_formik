@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import SinglePost from '../components/SinglePost';
 import { getCurrentPostFromDb } from '../helper/helper';
 import CommentsList from '../components/comments/CommentsList';
+import AddCommentForm from '../components/comments/AddCommentForm';
 
 function SinglePostPage(props) {
   const [currentPost, setPosts] = useState({});
@@ -20,8 +21,9 @@ function SinglePostPage(props) {
     <div>
       {currentPost.id && (
         <>
-          <SinglePost postData={currentPost} isSingle />{' '}
-          <CommentsList postId={props.id} />
+          <SinglePost postData={currentPost} isSingle />
+          <CommentsList postId={currentPostId} />
+          <AddCommentForm postId={currentPostId} />
         </>
       )}
     </div>
